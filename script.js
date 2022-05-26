@@ -1,10 +1,12 @@
 const operate = function(symbol, a, b){
     SymbolPressed = false;
+    first_entry = true;
     let result;
     if (symbol == "+") {
         result = add(a, b);
     }//else subtract...
     display.textContent = result;
+
 }
 const add = function(a, b){
     return parseInt(a) + parseInt(b);
@@ -20,31 +22,35 @@ let numA = -1;
 let numB = -1;
 let sym = '/';
 let SymbolPressed = false;
+var symbol_element;
+let first_entry = true;
 numbers.forEach((number) => {
     number.addEventListener('click', () => {
-        if (isNaN(display.textContent)) {
+        if (first_entry && SymbolPressed) {
             display.textContent = '';
+            first_entry = false;
+            symbol_element.classList.remove("pressed");
+            
         }
         display.textContent += number.value;
         console.log(numA);
-
+        //SymbolPressed = false;
     });
 });
 symbols.forEach((symbol) => {
     symbol.addEventListener('click', () => {
-        console.log(symbol.value);
-        
-
+        symbol_element = symbol;
         if (SymbolPressed) {
             lockB(display.textContent);
-            lockSym(symbol.value);
-            operate(sym, numA, numB)
+            operate(sym, numA, numB);
         }else{
-            lockA(display.textContent)
-            display.textContent = symbol.value;
-            lockSym(symbol.value);
+            console.log(symbol.value);
         }
+        lockSym(symbol.value)
+        lockA(display.textContent);
+        symbol.classList.add("pressed");
         SymbolPressed = true;
+
     });
 });
 equals.addEventListener('click', () =>{
