@@ -9,7 +9,11 @@ const operate = function(symbol, a, b){
     }else if(symbol == "*"){
         result = multiply(a, b);
     }else if(symbol == "/"){
-        result = divide(a, b);
+        if (b==0) {
+            cl();
+            alert("Error. Division by zero");
+        }else result = divide(a, b);
+        
     }
     
     display.textContent = result;
@@ -25,7 +29,7 @@ const multiply = function(a, b){
     return parseInt(a) * parseInt(b);
 }
 const divide = function(a, b){
-    return Math.floor(parseInt(a) / parseInt(b));
+    return (parseInt(a) / parseInt(b)).toFixed(2);
 }
 
 const display = document.querySelector(".display");
@@ -38,8 +42,10 @@ let numA = -1;
 let numB = -1;
 let sym = '/';
 let SymbolPressed = false;
+let to_calculate = false;
 var symbol_element;
 let first_entry = true;
+var clr = false;
 numbers.forEach((number) => {
     number.addEventListener('click', () => {
         if (first_entry && SymbolPressed) {
@@ -54,6 +60,10 @@ numbers.forEach((number) => {
 });
 symbols.forEach((symbol) => {
     symbol.addEventListener('click', () => {
+        if (SymbolPressed) {
+            symbol_element.classList.remove("pressed");
+        }
+        symbol.classList.add("pressed");
         symbol_element = symbol;
         if (SymbolPressed) {
             lockB(display.textContent);
@@ -61,10 +71,12 @@ symbols.forEach((symbol) => {
         }else{
             console.log(symbol.value);
         }
+        
         lockSym(symbol.value)
         lockA(display.textContent);
-        symbol.classList.add("pressed");
         SymbolPressed = true;
+               
+        
 
     });
 });
@@ -73,11 +85,16 @@ equals.addEventListener('click', () =>{
     operate(sym, numA, numB)
 });
 clear.addEventListener('click', () =>{
+    cl();
+    
+});
+
+const cl = function(){
     display.textContent = '';
     symbol_element.classList.remove("pressed");
     first_entry = true;
     SymbolPressed = false;
-});
+}
 
 const lockA = function(num){
     numA = num;
